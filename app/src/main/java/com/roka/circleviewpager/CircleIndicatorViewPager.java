@@ -34,6 +34,7 @@ public class CircleIndicatorViewPager extends FrameLayout {
     private CustomViewPager mCustomViewPager;
     private LeakPreventHandler mHandler;
 
+    private CustomOnPageChangeListener mCustomOnPageChangeListener;
 
     private int mAdapterCount = 0;
     private boolean mMotionFlagBl = true;
@@ -112,7 +113,9 @@ public class CircleIndicatorViewPager extends FrameLayout {
         mCustomViewPager.setCurrentItem(item);
     }
 
-
+    public void addCustomOnPageChangeListener(CustomOnPageChangeListener listener) {
+        this.mCustomOnPageChangeListener = listener;
+    }
 
     private void _changePagerScroller(int delay) {
         // TODO : 스크롤을 느리게한다.
@@ -212,6 +215,9 @@ public class CircleIndicatorViewPager extends FrameLayout {
     private ViewPager.OnPageChangeListener mOnPageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            if (mCustomOnPageChangeListener != null) {
+                mCustomOnPageChangeListener.onPageScrolled(position, positionOffset, positionOffsetPixels);
+            }
         }
 
         @Override
@@ -219,10 +225,16 @@ public class CircleIndicatorViewPager extends FrameLayout {
             // TODO : 인디케이터 위치 변경 리스너
             RadioButton first = (RadioButton) mRadioGroup.getChildAt(position);
             first.setChecked(true);
+            if (mCustomOnPageChangeListener != null) {
+                mCustomOnPageChangeListener.onPageSelected(position);
+            }
         }
 
         @Override
         public void onPageScrollStateChanged(int state) {
+            if (mCustomOnPageChangeListener != null) {
+                mCustomOnPageChangeListener.onPageScrollStateChanged(state);
+            }
         }
     };
 
