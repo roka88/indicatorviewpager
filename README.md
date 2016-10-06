@@ -25,7 +25,7 @@ repositories {
 
 <pre>
 dependencies {
-    compile 'com.github.roka88:circleindicatorview:0.0.5'
+    compile 'com.github.roka88:indicatorviewpager:0.0.6'
 }
 </pre>
 
