@@ -84,7 +84,7 @@ public class CircleIndicatorViewPager extends FrameLayout {
             mRootView.removeView(mRadioGroup);
         }
         addRadioGroup(isUpPosition);
-        addIndicator(mAdapterCount = pagerAdapter.getCount(), id);
+        addIndicator(mAdapterCount = pagerAdapter.getCount(), id, isUpPosition);
 
         mCustomViewPager.setAdapter(pagerAdapter);
         mCustomViewPager.addOnPageChangeListener(mOnPageChangeListener);
@@ -95,7 +95,7 @@ public class CircleIndicatorViewPager extends FrameLayout {
             mRootView.removeView(mRadioGroup);
         }
         addRadioGroup(isUpPosition);
-        addIndicator(mAdapterCount = pagerAdapter.getCount(), R.drawable.xml_radio_indicator_);
+        addIndicator(mAdapterCount = pagerAdapter.getCount(), R.drawable.xml_radio_indicator_, isUpPosition);
 
         mCustomViewPager.setAdapter(pagerAdapter);
         mCustomViewPager.addOnPageChangeListener(mOnPageChangeListener);
@@ -176,13 +176,17 @@ public class CircleIndicatorViewPager extends FrameLayout {
     }
 
     @TargetApi(21)
-    private void addIndicator(int pageCount, int id) {
+    private void addIndicator(int pageCount, int id, boolean isUpPosition) {
         if (pageCount <= 1) return;
 
         final int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
         final int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
         RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(width, height);
-
+        if (isUpPosition) {
+            params.setMargins(8, 40, 8, 0);
+        } else {
+            params.setMargins(8, 0, 8, 8);
+        }
         RadioButton button;
 
         for (int i = 0; i < pageCount; i++) {
