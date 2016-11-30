@@ -25,7 +25,7 @@ repositories {
 
 <pre>
 dependencies {
-    compile 'com.github.roka88:indicatorviewpager:0.0.6'
+    compile 'com.github.roka88:indicatorviewpager:0.0.7'
 }
 </pre>
 
@@ -196,6 +196,11 @@ public class TestPagerAdapter extends PagerAdapter {
 </pre>
 
 
+#ISSUE
+<pre>
+어뎁터의 notifyDataSetChanged() 호출 시 indicator를 갱신하지 못하고 에러가 뜸 
+어뎁터를 Wrapping할 커스텀 어뎁터를 만들어야하나 고민중
+</pre>
 
 #License
 <pre>
