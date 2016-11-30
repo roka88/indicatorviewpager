@@ -33,6 +33,7 @@ public class CircleIndicatorViewPager extends FrameLayout {
     private RadioGroup mRadioGroup;
     private CustomViewPager mCustomViewPager;
     private LeakPreventHandler mHandler;
+    private FrameLayout mRootView;
 
     private CustomOnPageChangeListener mCustomOnPageChangeListener;
 
@@ -47,11 +48,13 @@ public class CircleIndicatorViewPager extends FrameLayout {
 
     public CircleIndicatorViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mRootView = this;
         this.mContext = context;
         this.mCustomViewPager = new CustomViewPager(context);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         this.mCustomViewPager.setLayoutParams(params);
         this.addView(mCustomViewPager);
+
         this.mHandler = new LeakPreventHandler(this);
 
     }
@@ -76,16 +79,26 @@ public class CircleIndicatorViewPager extends FrameLayout {
         }
     }
 
-    public void setAdapter(@NonNull PagerAdapter pagerAdapter, @DrawableRes int id, boolean isUpPosition) {
+    public void setAdapter(@NonNull final PagerAdapter pagerAdapter, @DrawableRes final int id, final boolean isUpPosition) {
+        if (mRadioGroup != null) {
+            mRootView.removeView(mRadioGroup);
+        }
+        addRadioGroup(isUpPosition);
+        addIndicator(mAdapterCount = pagerAdapter.getCount(), id);
+
         mCustomViewPager.setAdapter(pagerAdapter);
         mCustomViewPager.addOnPageChangeListener(mOnPageChangeListener);
-        addIndicator(mAdapterCount = pagerAdapter.getCount(), id, isUpPosition);
     }
 
-    public void setAdapter(@NonNull PagerAdapter pagerAdapter, boolean isUpPosition) {
+    public void setAdapter(@NonNull final PagerAdapter pagerAdapter, final boolean isUpPosition) {
+        if (mRadioGroup != null) {
+            mRootView.removeView(mRadioGroup);
+        }
+        addRadioGroup(isUpPosition);
+        addIndicator(mAdapterCount = pagerAdapter.getCount(), R.drawable.xml_radio_indicator_);
+
         mCustomViewPager.setAdapter(pagerAdapter);
         mCustomViewPager.addOnPageChangeListener(mOnPageChangeListener);
-        addIndicator(mAdapterCount = pagerAdapter.getCount(), R.drawable.xml_radio_indicator_, isUpPosition);
     }
 
 
@@ -117,6 +130,12 @@ public class CircleIndicatorViewPager extends FrameLayout {
         this.mCustomOnPageChangeListener = listener;
     }
 
+    public void addOnAdapterChangeListener(ViewPager.OnAdapterChangeListener listener) {
+        if (mCustomViewPager != null) {
+            mCustomViewPager.addOnAdapterChangeListener(listener);
+        }
+    }
+
     private void _changePagerScroller(int delay) {
         // TODO : 스크롤을 느리게한다.
         try {
@@ -132,15 +151,13 @@ public class CircleIndicatorViewPager extends FrameLayout {
         }
     }
 
-    @TargetApi(21)
-    private void addIndicator(int pageCount, int id, boolean isUpPosition) {
-        if (pageCount <= 1) return;
+    private void addRadioGroup(boolean isUpPosition) {
 
         final int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
-        final int height = (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
+        final int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
         RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(width, height);
 
-        mRadioGroup = new RadioGroup(mContext);
+        this.mRadioGroup = new RadioGroup(mContext);
         RadioGroup.LayoutParams radioGroupParams = new RadioGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         mRadioGroup.setOrientation(mRadioGroup.HORIZONTAL);
         mRadioGroup.setLayoutParams(radioGroupParams);
@@ -152,6 +169,20 @@ public class CircleIndicatorViewPager extends FrameLayout {
             mRadioGroup.setGravity(Gravity.CENTER | Gravity.BOTTOM);
             params.setMargins(8, 0, 8, 8);
         }
+        if (mRadioGroup.getChildCount() != 0) {
+            mRadioGroup.removeAllViews();
+        }
+        this.addView(mRadioGroup);
+    }
+
+    @TargetApi(21)
+    private void addIndicator(int pageCount, int id) {
+        if (pageCount <= 1) return;
+
+        final int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
+        final int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
+        RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(width, height);
+
         RadioButton button;
 
         for (int i = 0; i < pageCount; i++) {
@@ -173,9 +204,8 @@ public class CircleIndicatorViewPager extends FrameLayout {
         RadioButton first = (RadioButton) mRadioGroup.getChildAt(0);
         first.setChecked(true);
 
-        addView(mRadioGroup);
-    }
 
+    }
 
 
     private void handleMessage(int what) {

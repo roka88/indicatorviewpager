@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 
 /**
  * Created by roka on 2016-01-14.
@@ -23,6 +24,9 @@ public class CustomViewPager extends ViewPager {
         super(context, attrs);
 
     }
+
+
+
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -44,6 +48,12 @@ public class CustomViewPager extends ViewPager {
         }
     }
 
+
+
+    @Override
+    public void addView(View child, int index, ViewGroup.LayoutParams params) {
+        super.addView(child, index, params);
+    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
