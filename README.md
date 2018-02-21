@@ -3,7 +3,7 @@
 
 인디케이터가 있는 뷰페이저를 만들었음
 
-![myimage-alt-tag](http://lycle.co.kr/images/t_1475678267095_user_event.png)
+![myimage-alt-tag](http://files.lycle.co.kr/images/t_1475678267095_user_event.png)
 
 
 
@@ -25,7 +25,7 @@ repositories {
 
 <pre>
 dependencies {
-    compile 'com.github.roka88:indicatorviewpager:0.0.7'
+    compile 'com.github.roka88:indicatorviewpager:0.0.8'
 }
 </pre>
 
